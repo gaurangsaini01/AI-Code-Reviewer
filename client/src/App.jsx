@@ -11,8 +11,8 @@ import { toast } from 'react-toastify'
 
 function App() {
   const [ loading,setLoading ] = useState(false)
-  const [ code, setCode ] = useState(` function sum() {
-  return 1 + 1
+  const [ code, setCode ] = useState(` function sum(a,b) {
+  return a + b
 }`)
 
   const [ review, setReview ] = useState(``)
@@ -23,11 +23,17 @@ function App() {
 
   async function reviewCode() {
     setLoading(true);
-    let id =toast.loading('Loading',{theme:"dark",position:'top-right'})
-    const response = await axios.post('http://localhost:3000/review-code', { code })
-    setLoading(false)
-    toast.dismiss(id)
-    setReview(response.data)
+    let id = toast.loading('Loading', { theme: "dark", position: 'top-right' });
+    try {
+      const response = await axios.post(import.meta.env.VITE_APP_BACKEND_URL, { code });
+      setReview(response.data);
+    } catch (error) {
+      toast.error('Review failed: ' + ('Backend error occurred'), { theme: "dark", position: 'top-right' });
+      console.error("Review code failed:", error); // Log for debugging
+    } finally {
+      toast.dismiss(id);
+      setLoading(false);
+    }
   }
 
   return (
