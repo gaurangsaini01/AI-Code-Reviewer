@@ -25,7 +25,7 @@ function App() {
     setLoading(true);
     let id = toast.loading('Loading', { theme: "dark", position: 'top-right' });
     try {
-      const response = await axios.post(import.meta.env.VITE_APP_BACKEND_URL, { code });
+      const response = await axios.post(import.meta.env.VITE_APP_MODE==='dev'?import.meta.env.VITE_APP_BACKEND_URL:import.meta.env.VITE_APP_PROD_URL, { code });
       setReview(response.data);
     } catch (error) {
       toast.error('Review failed: ' + ('Backend error occurred'), { theme: "dark", position: 'top-right' });
